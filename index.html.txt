@@ -1,0 +1,71 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>الآلة الحاسبة</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:#f0f4fa; color:#111; direction:rtl; }
+    .box{max-width:500px;margin:40px auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+    label{display:block;margin-top:10px;font-weight:bold;}
+    input, select{width:100%;padding:8px;margin-top:5px;font-size:1rem;}
+    button{width:100%;margin-top:15px;padding:10px;background:#2563eb;color:white;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;}
+    #result{margin-top:15px;padding:10px;background:#eef3ff;border-radius:8px;text-align:center;}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>🧮 الآلة الحاسبة البسيطة</h2>
+    <label>العدد الأول:</label>
+    <input id="num1" type="text" placeholder="مثال: 5.5">
+    <label>العملية:</label>
+    <select id="op">
+      <option value="+">+</option>
+      <option value="-">-</option>
+      <option value="*">*</option>
+      <option value="/">/</option>
+      <option value="**">** (أس)</option>
+    </select>
+    <label>العدد الثاني:</label>
+    <input id="num2" type="text" placeholder="مثال: 3">
+    <button id="calcBtn">احسب</button>
+    <div id="result"></div>
+  </div>
+
+  <!-- Load Pyodide (so your browser can run Python) -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+  <script>
+    let pyodide;
+    async function loadPy() {
+      pyodide = await loadPyodide();
+      document.getElementById("result").textContent = "الآلة جاهزة!";
+    }
+    loadPy();
+
+    document.getElementById("calcBtn").onclick = async () => {
+      const n1 = document.getElementById("num1").value;
+      const n2 = document.getElementById("num2").value;
+      const op = document.getElementById("op").value;
+      const code = `
+def calc(a, op, b):
+    try:
+        a = float(a)
+        b = float(b)
+    except:
+        return "خطأ: أدخل أعدادًا صحيحة"
+    if op == "+": return a + b
+    elif op == "-": return a - b
+    elif op == "*": return a * b
+    elif op == "/":
+        return "اقتسام العدد على عدمٍ محال" if b == 0 else a / b
+    elif op == "**": return a ** b
+    else: return "غير متاح"
+calc(${JSON.stringify(n1)}, ${JSON.stringify(op)}, ${JSON.stringify(n2)})
+`;
+      const result = await pyodide.runPythonAsync(code);
+      document.getElementById("result").textContent = "النتيجة: " + result;
+    };
+  </script>
+</body>
+</html>
