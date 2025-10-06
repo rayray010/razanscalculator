@@ -16,7 +16,7 @@
 </head>
 <body>
   <div class="box">
-    <h2> الة حاسبة </h2>
+    <h2> آلة حاسبة </h2>
     <label>أدخل العدد الأول:</label>
     <input id="num1" type="text" placeholder="مثال: 5.5">
     <label>أدخل عامل العملية:</label>
@@ -39,7 +39,7 @@
     let pyodide;
     async function loadPy() {
       pyodide = await loadPyodide();
-      document.getElementById("result").textContent = "الآلة جاهزة!";
+      document.getElementById("result").textContent = "ابدأ الآن";
     }
     loadPy();
 
@@ -69,4 +69,5 @@ calc(${JSON.stringify(n1)}, ${JSON.stringify(op)}, ${JSON.stringify(n2)})
   </script>
 </body>
 </html>
+
 
